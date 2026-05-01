@@ -1,0 +1,32 @@
+runtime: declarative
+schema_version: "1.0"
+
+scaffold:
+  appBar:
+    title: { es: Desglose de huella, en: Footprint breakdown }
+  body:
+    - kind: section
+      title: { es: Resumen, en: Summary }
+      children:
+        - kind: kpi_grid
+          source: route_param
+          param: reportId
+          load_from:
+            collection: activity_log
+            doc_id: "{{reportId}}"
+          mapping:
+            kpis:
+              - { label: { es: Total, en: Total }, value: "{{payload.total_kg_co2e}}" }
+              - { label: { es: Por tonelada, en: Per ton }, value: "{{payload.kg_co2e_per_ton}}" }
+              - { label: { es: Por hectarea, en: Per ha }, value: "{{payload.kg_co2e_per_ha}}" }
+              - { label: { es: Neto, en: Net }, value: "{{payload.net_kg_co2e}}" }
+    - kind: section
+      title: { es: Por scope, en: By scope }
+      children:
+        - kind: bar_chart
+          source: report
+          series:
+            - { key: scope1_direct, label: { es: Scope 1 directo, en: Scope 1 direct } }
+            - { key: scope2_energy, label: { es: Scope 2 energia, en: Scope 2 energy } }
+            - { key: scope3_indirect, label: { es: Scope 3 indirectas, en: Scope 3 indirect } }
+            - { key: sequestration_kg, label: { es: Secuestro, en: Sequestration }, sign: negative }

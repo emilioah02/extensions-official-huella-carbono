@@ -1,0 +1,52 @@
+runtime: declarative
+schema_version: "1.0"
+
+scaffold:
+  appBar:
+    title: { es: Calcular huella, en: Compute footprint }
+  body:
+    - kind: form
+      id: carbon_inputs
+      submit:
+        kind: invoke_calculator
+        calculator_id: carbon_footprint_v1
+        on_success:
+          - kind: write_activity_log
+            entry_kind: carbon_report
+            payload_from: result
+          - kind: navigate
+            route: /huella-carbono/desglose/{{result_id}}
+      sections:
+        - title: { es: Cultivo, en: Crop }
+          fields:
+            - { name: crop_type, type: crop_picker, required: true }
+            - { name: area_ha, type: number, required: true, min: 0.01 }
+            - { name: growing_period_days, type: number, required: true }
+            - { name: expected_yield_t_ha, type: number, required: true }
+        - title: { es: Maquinaria, en: Machinery }
+          fields:
+            - { name: diesel_l, type: number }
+            - { name: gasoline_l, type: number }
+            - { name: electricity_kwh, type: number }
+        - title: { es: Fertilizacion (kg/ha), en: Fertilizers (kg/ha) }
+          fields:
+            - { name: urea_kg_ha, type: number }
+            - { name: map_kg_ha, type: number }
+            - { name: dap_kg_ha, type: number }
+            - { name: kcl_kg_ha, type: number }
+            - { name: other_n_kg_ha, type: number }
+        - title: { es: Pesticidas (kg ai/ha), en: Pesticides (kg ai/ha) }
+          fields:
+            - { name: herbicide_kg_ha, type: number }
+            - { name: insecticide_kg_ha, type: number }
+            - { name: fungicide_kg_ha, type: number }
+        - title: { es: Practicas regenerativas, en: Regenerative practices }
+          fields:
+            - { name: uses_n_inhibitors, type: switch }
+            - { name: uses_cover_crops, type: switch }
+            - { name: uses_no_till, type: switch }
+            - { name: uses_agroforestry, type: switch }
+            - { name: compost_t_ha, type: number }
+        - title: { es: Pais (factor electrico), en: Country (grid factor) }
+          fields:
+            - { name: country_iso, type: country_picker, required: true, default: MX }

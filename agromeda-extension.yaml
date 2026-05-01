@@ -1,0 +1,138 @@
+schema_version: "1.0"
+name: huella-carbono
+version: 1.0.0
+publisher: agromeda
+
+display_name:
+  es: Huella de Carbono
+  en: Carbon Footprint
+description:
+  es: Calcula emisiones GEI por cultivo (Scope 1+2+3) y secuestro por prácticas regenerativas.
+  en: Calculate GHG emissions per crop (Scope 1+2+3) and sequestration from regenerative practices.
+
+long_description_path: README.md
+icon: assets/icon.png
+screenshots:
+  - assets/screenshots/home.png
+  - assets/screenshots/inputs.png
+  - assets/screenshots/breakdown.png
+
+license: Proprietary
+homepage_url: https://agromeda.web.app/extensions/huella-carbono
+repository_url: https://github.com/Agromeda/extensions-official-huella-carbono
+bugs_url: https://github.com/Agromeda/extensions-official-huella-carbono/issues
+
+categories:
+  - reporting
+  - precision_tech
+
+applies_to:
+  systems:
+    - field_extensive_rainfed
+    - field_row_crop_drip
+    - field_row_crop_pivot
+    - field_row_crop_sprinkler
+    - field_row_crop_surface
+    - field_orchard_drip
+    - field_orchard_microsprinkler
+    - protected_greenhouse
+    - protected_shadehouse
+    - hydroponics_nft
+    - hydroponics_dwc
+    - hydroponics_substrate
+    - vertical_farm
+    - aquaponics
+    - agroforestry_shade
+    - silvopastoral
+
+min_app_version: "2.0.0"
+target_size_kb_max: 1024
+
+permissions:
+  - read:active_parcel
+  - read:milpa_history
+  - write:activity_log
+  - ai_edit:invoke
+  - ai_chat:context
+  - storage:local
+
+pricing:
+  model: freemium
+  tier_required: Free
+
+contributes:
+  sidebar_entries:
+    - id: carbon_main
+      label: { es: Huella de Carbono, en: Carbon Footprint }
+      icon: cloud_outlined
+      route: /huella-carbono
+      category: reporting
+      order: 220
+  screens:
+    - id: carbon_home
+      route: /huella-carbono
+      runtime: declarative
+      entry: ui/home.yaml
+      title: { es: Huella de Carbono, en: Carbon Footprint }
+    - id: carbon_inputs
+      route: /huella-carbono/calcular/:parcelId
+      runtime: declarative
+      entry: ui/inputs.yaml
+      title: { es: Calcular huella, en: Calculate footprint }
+    - id: carbon_breakdown
+      route: /huella-carbono/desglose/:reportId
+      runtime: declarative
+      entry: ui/breakdown.yaml
+      title: { es: Desglose, en: Breakdown }
+  milpa_topics:
+    - knowledge/factores-emision.milpa-pack.yaml
+    - knowledge/practicas-mitigacion.milpa-pack.yaml
+  calculators:
+    - id: carbon_footprint_v1
+      runtime: wasm
+      entry: wasm/carbon_footprint.wasm
+      inputs:
+        - { name: crop_type, type: string }
+        - { name: area_ha, type: number }
+        - { name: growing_period_days, type: number }
+        - { name: expected_yield_t_ha, type: number }
+        - { name: diesel_l, type: number }
+        - { name: gasoline_l, type: number }
+        - { name: electricity_kwh, type: number }
+        - { name: urea_kg_ha, type: number }
+        - { name: map_kg_ha, type: number }
+        - { name: dap_kg_ha, type: number }
+        - { name: kcl_kg_ha, type: number }
+        - { name: other_n_kg_ha, type: number }
+        - { name: herbicide_kg_ha, type: number }
+        - { name: insecticide_kg_ha, type: number }
+        - { name: fungicide_kg_ha, type: number }
+        - { name: uses_n_inhibitors, type: boolean }
+        - { name: uses_cover_crops, type: boolean }
+        - { name: uses_no_till, type: boolean }
+        - { name: uses_agroforestry, type: boolean }
+        - { name: compost_t_ha, type: number }
+        - { name: country_iso, type: string }
+      outputs:
+        - { name: total_kg_co2e, type: number }
+        - { name: kg_co2e_per_ton, type: number }
+        - { name: kg_co2e_per_ha, type: number }
+        - { name: scope1_direct, type: number }
+        - { name: scope2_energy, type: number }
+        - { name: scope3_indirect, type: number }
+        - { name: sequestration_kg, type: number }
+        - { name: net_kg_co2e, type: number }
+  ai_edit_handlers:
+    - action_key: parcel.carbon.report.create
+      label: { es: Calcular huella de carbono, en: Compute carbon footprint }
+      category: reporting
+      fields:
+        - { name: parcel_id, type: parcel_id, required: true }
+        - { name: crop_type, type: string, required: true }
+        - { name: area_ha, type: number, required: true }
+        - { name: expected_yield_t_ha, type: number, required: true }
+  dashboard_widgets:
+    - id: carbon_kpi
+      slot: home_overview
+      runtime: declarative
+      entry: ui/widget_kpi.yaml

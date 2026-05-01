@@ -1,0 +1,10 @@
+dist/
+*.agroext
+target/
+*.wasm.signed
+.env
+.env.local
+publisher.key
+*.private.key
+.DS_Store
+Thumbs.db

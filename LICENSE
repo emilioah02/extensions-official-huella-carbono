@@ -1,0 +1,23 @@
+Copyright (c) 2026 Agromeda S.A.S. de C.V.
+
+This is a first-party Agromeda Platform extension. The source is published
+publicly for transparency, audit, and educational use, but it is not
+open-source software.
+
+Permitted, without prior authorization:
+
+  1. Reading the source for the purpose of understanding behavior.
+  2. Filing bug reports and feature requests.
+  3. Quoting fragments in academic citations and code reviews.
+
+Not permitted, without explicit written authorization from
+Agromeda S.A.S. de C.V.:
+
+  1. Redistribution, in whole or in part, in any form.
+  2. Operation of a hosted clone of this extension's behavior.
+  3. Use of the bundle's signature, name, or icon outside the official
+     channels.
+  4. Use of the calculation or knowledge content as inputs to a competing
+     product.
+
+Inquiries: legal@agromeda.com

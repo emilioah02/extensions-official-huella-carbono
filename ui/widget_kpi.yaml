@@ -1,0 +1,25 @@
+runtime: declarative
+schema_version: "1.0"
+
+widget:
+  kind: kpi_card
+  title: { es: Huella ultima, en: Latest footprint }
+  source: query
+  query:
+    collection: activity_log
+    where:
+      - { field: kind, op: ==, value: carbon_report }
+      - { field: parcel_id, op: ==, value: "{{active_parcel_id}}" }
+    order_by: created_at desc
+    limit: 1
+  mapping:
+    primary:
+      label: { es: kgCO2e/ton, en: kgCO2e/ton }
+      value: "{{payload.kg_co2e_per_ton}}"
+      precision: 1
+    secondary:
+      label: { es: Neto, en: Net }
+      value: "{{payload.net_kg_co2e}}"
+  on_tap:
+    kind: navigate
+    route: /huella-carbono/desglose/{{id}}

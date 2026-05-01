@@ -1,0 +1,39 @@
+schema_version: "1.0"
+name: factores-emision
+version: 1.0.0
+publisher: agromeda
+license: CC-BY-SA-4.0
+
+display_name:
+  es: Factores de emision IPCC
+  en: IPCC emission factors
+
+description:
+  es: Factores estandar IPCC AR6 + EcoInvent para calculo de huella de carbono agricola.
+  en: Standard IPCC AR6 + EcoInvent factors for agricultural carbon footprint computation.
+
+applies_to:
+  systems: ["*"]
+
+topics:
+  - id: huella.factor_n2o_directo
+    when: "permission has read:milpa_history"
+    risk_level: low
+    answer_template: |
+      El factor N2O directo es 0.01 kg N2O-N por kg N (IPCC AR6 Tier 1).
+      Convertido a kgCO2e con GWP 273 y fraccion 44/28: ~4.29 kgCO2e/kg N.
+  - id: huella.factor_diesel
+    when: "default"
+    risk_level: low
+    answer_template: |
+      Combustion de diesel: 2.68 kgCO2e por litro (EPA + EcoInvent).
+  - id: huella.factor_gasolina
+    when: "default"
+    risk_level: low
+    answer_template: |
+      Combustion de gasolina: 2.31 kgCO2e por litro.
+  - id: huella.factor_urea
+    when: "default"
+    risk_level: low
+    answer_template: |
+      Produccion + transporte de urea: 3.6 kgCO2e por kg (EcoInvent v3.9).

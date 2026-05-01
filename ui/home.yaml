@@ -1,0 +1,48 @@
+runtime: declarative
+schema_version: "1.0"
+
+scaffold:
+  appBar:
+    title: { es: Huella de Carbono, en: Carbon Footprint }
+  body:
+    - kind: section
+      title: { es: Resumen, en: Summary }
+      children:
+        - kind: kpi_grid
+          source: query
+          query:
+            collection: activity_log
+            where:
+              - { field: kind, op: ==, value: carbon_report }
+              - { field: parcel_id, op: ==, value: "{{active_parcel_id}}" }
+            order_by: created_at desc
+            limit: 1
+          mapping:
+            kpis:
+              - { label: { es: Total kgCO2e, en: Total kgCO2e }, value: "{{total_kg_co2e}}" }
+              - { label: { es: kgCO2e/ton, en: kgCO2e/ton }, value: "{{kg_co2e_per_ton}}" }
+              - { label: { es: Secuestro, en: Sequestration }, value: "{{sequestration_kg}}" }
+              - { label: { es: Neto, en: Net }, value: "{{net_kg_co2e}}" }
+    - kind: section
+      title: { es: Acciones, en: Actions }
+      children:
+        - kind: button
+          label: { es: Calcular nueva huella, en: Compute new footprint }
+          icon: calculate_outlined
+          action:
+            kind: navigate
+            route: /huella-carbono/calcular/{{active_parcel_id}}
+        - kind: button
+          label: { es: Ver desglose ultimo calculo, en: View last breakdown }
+          icon: pie_chart_outline
+          condition: "{{has_recent_carbon_report}}"
+          action:
+            kind: navigate
+            route: /huella-carbono/desglose/{{last_carbon_report_id}}
+    - kind: section
+      title: { es: Recomendaciones MILPA, en: MILPA recommendations }
+      children:
+        - kind: milpa_chip_row
+          topic_filter:
+            pack: practicas-mitigacion
+            risk_level: low
